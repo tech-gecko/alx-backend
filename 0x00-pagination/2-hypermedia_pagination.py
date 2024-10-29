@@ -62,13 +62,24 @@ class Server:
             'total_pages': the total number of pages in the dataset (int)
         """
         dataset = self.dataset()
+
+        start_index, end_index = index_range(page, page_size)
+
         page_list = self.get_page(page, page_size)
 
         page_info_dict = {
-            'page_size': page_size,
+            'page_size': (
+                0
+                if start_index < 0 or end_index > len(dataset) - 1
+                else page_size
+                ),
             'page': page,
             'data': page_list,
-            'next_page': page + 1 if len(page_list) < page else None,
+            'next_page': (
+                None
+                if start_index < 0 or end_index > len(dataset) - 1
+                else page + 1
+            ),
             'prev_page': page - 1 if page > 1 else None,
             'total_pages': math.ceil(len(dataset) / page_size)
         }
