@@ -2,6 +2,7 @@
 """ Module containing the 'LIFOCache' class. """
 from base_caching import BaseCaching
 
+
 class LIFOCache(BaseCaching):
     """
         LIFO Caching system that defines 'put' and 'get' methods for the
@@ -22,9 +23,9 @@ class LIFOCache(BaseCaching):
         # If key exists, remove it so it can be re-added as the most recent
         if key in self.cache_data:
             del self.cache_data[key]
-        
+
         # If cache is at max capacity, remove the last-added item
-        elif len(self.cache_data) >= self.MAX_ITEMS:
+        while len(self.cache_data) > self.MAX_ITEMS:
             last_key = next(reversed(self.cache_data))
             print(f"DISCARD: {last_key}")
             del self.cache_data[last_key]
