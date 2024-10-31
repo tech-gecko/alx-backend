@@ -10,6 +10,8 @@ class LIFOCache(BaseCaching):
     """
     def __init__(self):
         super().__init__()
+        # Key list, according to adding or updating time.
+        self.key_list = []
 
     def put(self, key, item):
         """
@@ -20,18 +22,22 @@ class LIFOCache(BaseCaching):
         if key is None or item is None:
             return
 
-        # If key exists, remove it so it can be re-added as the most recent
+        # If the key already exists, update it and append key to 'key_list'.
         if key in self.cache_data:
-            del self.cache_data[key]
+            self.cache_data[key] = item
+            self.key_list.append(key)
+            return  # No need to check size as only an update was done.
 
-        # If cache is at max capacity, remove the last-added item
+        # If the cache is at or above max capacity, remove the last-added item.
+        # The key removed is removed from 'key_list'.
         while len(self.cache_data) >= self.MAX_ITEMS:
-            last_key = next(reversed(self.cache_data))
+            last_key = self.key_list.pop()  # Remove & return last updated key.
             print(f"DISCARD: {last_key}")
-            del self.cache_data[last_key]
+            del self.cache_data[last_key]  # Remove the last item from cache.
 
-        # Add or update key-value pair as the newest item in cache
+        # Add the new key-value pair and append key to 'key_list'.
         self.cache_data[key] = item
+        self.key_list.append(key)
 
     def get(self, key):
         """ Returns the value in the cache dictionary linked to 'key'. """
