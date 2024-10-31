@@ -25,7 +25,7 @@ class LIFOCache(BaseCaching):
             del self.cache_data[key]
 
         # If cache is at max capacity, remove the last-added item
-        while len(self.cache_data) > self.MAX_ITEMS:
+        while len(self.cache_data) >= self.MAX_ITEMS:
             last_key = next(reversed(self.cache_data))
             print(f"DISCARD: {last_key}")
             del self.cache_data[last_key]
